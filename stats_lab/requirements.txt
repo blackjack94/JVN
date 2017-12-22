@@ -26,6 +26,7 @@ numpy==1.13.3
 pandas==0.21.1
 pandocfilters==1.4.2
 parso==0.1.0
+patsy==0.4.1
 pexpect==4.3.1
 pickleshare==0.7.4
 prompt-toolkit==1.0.15
@@ -42,6 +43,7 @@ scikit-learn==0.19.1
 scipy==1.0.0
 simplegeneric==0.8.1
 six==1.11.0
+statsmodels==0.8.0
 terminado==0.8.1
 testpath==0.3.1
 tornado==4.5.2
