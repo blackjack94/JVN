@@ -28,8 +28,8 @@ WHERE City IN ('Stuttgart', 'Seattle', 'Sao Paulo', 'Toulouse', 'Barcelona');
 
 # Q5. List all the Orders that have the total value over 10,000.
 SELECT Orders.*, SUM(UnitPrice * Quantity) AS total_value
-FROM Orders JOIN `Order Details` 
-			ON Orders.OrderID = `Order Details`.OrderID
+FROM Orders JOIN `Order Details`
+						ON Orders.OrderID = `Order Details`.OrderID
 GROUP BY Orders.OrderID
 HAVING total_value > 10000;
 
@@ -47,7 +47,7 @@ WHERE Notes LIKE '% BA %';
 # territory, how many is it?
 SELECT Employees.*, COUNT(EmployeeTerritories.EmployeeID) AS total_manage
 FROM Employees LEFT JOIN EmployeeTerritories
-			   ON Employees.EmployeeID = EmployeeTerritories.EmployeeID
+			   			ON Employees.EmployeeID = EmployeeTerritories.EmployeeID
 GROUP BY Employees.EmployeeID
 ORDER BY total_manage DESC
 LIMIT 1;
@@ -55,9 +55,9 @@ LIMIT 1;
 # Q9. Get all product’ category IDs and its total Unit in stock and total Unit on order that
 # have total unit on order pass over 30% of total unit in stock.
 SELECT Categories.CategoryID,
-	   SUM(Products.UnitsInStock) as total_in_stock, SUM(Products.UnitsOnOrder) as total_on_order
+	  	SUM(Products.UnitsInStock) as total_in_stock, SUM(Products.UnitsOnOrder) as total_on_order
 FROM Categories LEFT JOIN Products
-	            ON Categories.CategoryID = Products.CategoryID
+	            	ON Categories.CategoryID = Products.CategoryID
 GROUP BY Categories.CategoryID
 HAVING total_on_order > 0.3 * total_in_stock;
 
@@ -71,7 +71,7 @@ WHERE Country IS NOT NULL;
 SELECT *
 FROM Customers
 WHERE Country NOT IN (SELECT * FROM SuppliersNations)
-	  OR Country IS NULL;
+	  	OR Country IS NULL;
 
 # Remark: I use Nullity-check because Null's comparisons are always Null (never True)
 # => IN () will malfunction.
@@ -80,10 +80,10 @@ WHERE Country NOT IN (SELECT * FROM SuppliersNations)
 # Q11. Find the Company name(s), who has bought more than 50% products (ProductName)
 # that we have, and how many products they have bought?
 SELECT Customers.CompanyName,
-	   COUNT(DISTINCT Products.ProductID) as bought_products_count
+	   	COUNT(DISTINCT Products.ProductID) as bought_products_count
 FROM Customers LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID
-			   LEFT JOIN `Order Details` ON Orders.OrderID = `Order Details`.OrderID
-			   LEFT JOIN Products ON `Order Details`.ProductID = Products.ProductID
+			  			LEFT JOIN `Order Details` ON Orders.OrderID = `Order Details`.OrderID
+			  			LEFT JOIN Products ON `Order Details`.ProductID = Products.ProductID
 GROUP BY Customers.CustomerID
 HAVING bought_products_count > 0.5 * (SELECT COUNT(DISTINCT ProductName) FROM Products);
 
@@ -91,20 +91,20 @@ HAVING bought_products_count > 0.5 * (SELECT COUNT(DISTINCT ProductName) FROM Pr
 # total sales (amount of money).
 CREATE OR REPLACE VIEW EmployeesSalesByCategories AS
 SELECT CONCAT(Employees.FirstName, ' ', Employees.LastName) AS employee_name,
-	   Categories.*,
-       SUM(`Order Details`.Quantity * `Order Details`.UnitPrice) AS total_sales
+	   	Categories.*,
+      SUM(`Order Details`.Quantity * `Order Details`.UnitPrice) AS total_sales
 FROM Categories LEFT JOIN Products ON Categories.CategoryID = Products.CategoryID
-				LEFT JOIN `Order Details` ON Products.ProductID = `Order Details`.ProductID
-				LEFT JOIN Orders ON `Order Details`.OrderID = Orders.OrderID
-				LEFT JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID
+								LEFT JOIN `Order Details` ON Products.ProductID = `Order Details`.ProductID
+								LEFT JOIN Orders ON `Order Details`.OrderID = Orders.OrderID
+								LEFT JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID
 GROUP BY Employees.EmployeeID, Categories.CategoryID;
 
 SELECT CategoryName, employee_name, total_sales
 FROM EmployeesSalesByCategories JOIN (SELECT CategoryID, MAX(total_sales) as max_total_sales
-									  FROM EmployeesSalesByCategories
-									  GROUP BY CategoryID) AS tmp
-	 ON EmployeesSalesByCategories.CategoryID = tmp.CategoryID
-     AND EmployeesSalesByCategories.total_sales = tmp.max_total_sales;
+									  									FROM EmployeesSalesByCategories
+									  									GROUP BY CategoryID) AS tmp
+	 		ON EmployeesSalesByCategories.CategoryID = tmp.CategoryID
+     	AND EmployeesSalesByCategories.total_sales = tmp.max_total_sales;
 
 # Q13. Table 'Order' is used the most.
 # WHY? I searched for 'FROM' on the whole script,
